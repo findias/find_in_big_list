@@ -1,7 +1,9 @@
 # module connection
 import csv
+import pandas as pd
+from pandas import ExcelWriter
 
-def csv_reader(file_obj, delim):
+def csv_reader(file_obj, delim, *index):
     sm_list_new = []
     '''
     Read a file and iteration in list
@@ -33,9 +35,9 @@ if __name__ == "__main__":
     '''
     Open file
     '''
-    with open("sm.csv") as sm_obj:
+    with open('sm.csv') as sm_obj:
         sm = csv_reader(sm_obj, ',')
-    with open("sccm.csv") as sccm_obj:
+    with open('sccm.csv') as sccm_obj:
        sccm = csv_reader(sccm_obj, ';')
     '''
     Find in file
@@ -47,3 +49,10 @@ if __name__ == "__main__":
     '''
     write_to_file('Result_find_in_sm.txt', find_in_sm)
     write_to_file('Result_find_in_sccm.txt', find_in_sccm)
+
+    df = pd.DataFrame(find_in_sm) # Получаем данные из find_in_sm
+    df1 = pd.DataFrame(find_in_sccm) # Получаем данные из find_in_sccm
+    writer = ExcelWriter('result_file.xlsx') # Создаем файл *.xlsx
+    df.to_excel(writer, 'Find_in_sm', index = False) #Создаем лист, передаем данные
+    df1.to_excel(writer, 'Find_in_sccm', index = False) #Создаем лист, передаем данные
+    writer.save()# Записываем в файл
