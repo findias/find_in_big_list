@@ -2,7 +2,7 @@
 import csv
 import pandas as pd
 from pandas import ExcelWriter
-from openpyxl import load_workbook
+import xlwt
 
 
 def csv_reader(file_obj, delim, *index):
@@ -24,14 +24,20 @@ def look_at_list(main_list, slave_list):
        if main_found_object not in slave_list: # Применяем итерацию по принципу "Если нет, то..."
            not_found.append(main_found_object)
     return not_found
-    '''
-    Write to file
-    '''
-
+'''
+Write in file
+'''
 def write_to_file(filename, result): # Функция организовывает запись в файл
     with open(filename, 'w') as f:
         for line in result:
             f.write("{},\n".format(line)) # Пишем в файл результат
+
+'''
+Create a new sheets in excel file, and insert data.
+'''
+def new_sheet(sheet_name, find_in):
+    df = pd.DataFrame(find_in) # Получаем данные из find_in_sm
+    df.to_excel(writer, sheet_name, header=None, index = False) #Создаем лист, передаем данные
 
 if __name__ == "__main__":
     '''
@@ -52,14 +58,10 @@ if __name__ == "__main__":
     write_to_file('Result_find_in_sm.txt', find_in_sm)
     write_to_file('Result_find_in_sccm.txt', find_in_sccm)
 
-
-    def excel_creater(find_in, name_excel, sheet_name):
-        df = pd.read_excel(find_in, header=None)
-        #df = pd.DataFrame(find_in) # Получаем данные из find_in_sm
-        writer = ExcelWriter(name_excel) # Создаем файл *.xlsx
-        df.to_excel(writer, sheet_name, header=None, index = False) #Создаем лист, передаем данные
-        writer.save() # Записываем в файл
-        writer.close() # Закрыть файл
-    excel_sm = excel_creater(find_in_sm, 'result_file.xlsx', 'in_sm')
-    excel_sccm = excel_creater(find_in_sccm, 'result_file.xlsx', 'in_sccm')
-
+    '''
+    Create new file excel 
+    '''
+    writer = ExcelWriter('some_file.xlsx')  # Создаем файл *.xlsx
+    sm_sheet = new_sheet('in_sm', find_in_sm)
+    sccm_sheet = new_sheet('in_sccm', find_in_sccm)
+    writer.save()
