@@ -2,18 +2,16 @@
 import csv
 import pandas as pd
 from pandas import ExcelWriter
-import xlwt
-
 
 def csv_reader(file_obj, delim, *index):
-    sm_list_new = []
+    list_new = []
     '''
     Read a file and iteration in list
     '''
-    sm_reader = csv.reader(file_obj, delimiter = delim)
-    for sm_line in sm_reader:
-        sm_list_new.append([sm_line[0], sm_line[1]]) # Добавляем в новый список  занчения по индексу
-    return sm_list_new
+    reader = csv.reader(file_obj, delimiter = delim)
+    for line in reader:
+        list_new.append([line[0], line[1]]) # Добавляем в новый список  занчения по индексу
+    return list_new
 
 def look_at_list(main_list, slave_list):
     not_found = []
